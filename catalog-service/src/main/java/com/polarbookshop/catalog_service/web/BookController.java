@@ -37,7 +37,7 @@ public class BookController {
         bookService.removeBookFromCatalog(isbn);
     }
 
-    @PutMapping("{isbn}")
+    @PutMapping("{isbn}") // @Valid로 book 유효성 검사
     public Book put(@PathVariable("isbn") String isbn, @Valid @RequestBody Book book) {
         return bookService.editBookDetails(isbn, book);
     }
