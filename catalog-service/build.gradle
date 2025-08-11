@@ -23,13 +23,26 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2025.0.0") // 사용할 스프링 클라우드 버전
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'  // 메타데이터가 자동으로 생성되어, 속성의 자동 완성 및 유형 검사가 가능함
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'  // 메타데이터가 자동으로 생성되어, 속성의 자동 완성 및 유형 검사가 가능함
+}
+
+dependencyManagement {
+	imports { // 스프링 클라우드 의존성 관리를 위한 BOM(Bill of Material)
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 bootRun {
