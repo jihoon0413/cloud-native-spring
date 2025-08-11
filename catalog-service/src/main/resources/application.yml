@@ -7,5 +7,14 @@ server:
       max: 50
       min-spare: 5
 
+spring:
+  application:
+    name: catalog-service # config-server에서 설정한 spring:application:name 과 같아야 해당 uri로 설정을 가져올 수 있음
+  config:
+    import: "optional:configserver:" # 가능하면 서버에서 설정 데이터를 가져오도록 설정 -> 설정 서버가 동작하지 않았도 애플리케이션이 동작할 수 있도록 설정
+  cloud:
+    config:
+      uri: http://localhost:8888 # 설정 서버의 url주소
+
 polar:
   greeting: Welcome to the local book catalog!
