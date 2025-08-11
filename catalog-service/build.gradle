@@ -32,6 +32,10 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'  // 메타데이터가 자동으로 생성되어, 속성의 자동 완성 및 유형 검사가 가능함
 }
 
+bootRun {
+	systemProperty 'spring.profiles.active', 'testdata'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
