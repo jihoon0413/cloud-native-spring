@@ -1,0 +1,8 @@
+server:
+  port: 9001
+  tomcat:
+    connection-timeout: 2s  # Time to wait for TCP (3-way handshake) link
+    keep-alive-timeout: 15s # Time to wait for the next request since the last response
+    threads:
+      max: 50
+      min-spare: 5
