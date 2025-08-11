@@ -16,5 +16,7 @@ spring:
         git:
           uri: https://github.com/jihoon0413/cloud-native-spring.git
           default-label: main
-          searchPaths: config-repo # ?? ????? ??? ???
-
+          searchPaths: config-repo # 설정 저장소가 서브프로젝트에 있어 서브프로젝트 경로 설정
+          timeout: 5  # 원격 저장소와 연결시 시간 한도
+          clone-on-start: true # 서비스 시작시 원격 저장소를 로컬로 먼저 복제해 저장하도록 설정
+          force-pull: true # 원격 설정 저장소와 로컬의 설정이 달라졌을 때 삭제하고 다시 로드
