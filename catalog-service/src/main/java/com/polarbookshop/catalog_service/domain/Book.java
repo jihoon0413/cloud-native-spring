@@ -3,8 +3,14 @@ package com.polarbookshop.catalog_service.domain;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 
 public record Book(
+
+        @Id
+        Long id,
+
         @NotNull(message = "The book ISBN must be defined.")
         @Pattern(
                 regexp = "^([0-9]{10}|[0-9]{13})$",
@@ -20,6 +26,14 @@ public record Book(
 
         @NotNull(message = "The book price must be defined.") // null이면 안됨
         @Positive(message = "The book price must be greater than zero") // 0 보다 큰 수
-        Double price
+        Double price,
+
+        @Version // 업데이트 마다 자동으로 숫자를 증가
+        int version
 ) {
+
+        public static Book of(String isbn, String title, String author, Double price) {
+                return new Book(null, isbn, title, author, price, 0);
+                // id 가 null이고 version이 0이여야 새로운 객체로 간주
+        }
 }
