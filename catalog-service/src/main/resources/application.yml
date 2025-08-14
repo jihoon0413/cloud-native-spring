@@ -23,6 +23,13 @@ spring:
         initial-interval: 1000 # 최초 재시도 지연 시간
         max-interval: 2000 # 재시도 지연 최대 시간
         multiplier: 1.1 # 지연 시간 계산 승수
+  datasource:
+    username: user
+    password: passwrod
+    url: jdbc:postgresql://localhost:5432/polardb-catalog
+    hikari: # 연결 재상용을 위한 연결 폴링의 한 종류
+      connection-timeout: 2000 # 풀에서 연결 객체를 얻기 위해 기다리는 최대 시간
+      maximum-pool-size: 5 # 히카리가 풀에서 유지할 수 있는 최대 연결 객체 수
 management:
   endpoints:
     web:
