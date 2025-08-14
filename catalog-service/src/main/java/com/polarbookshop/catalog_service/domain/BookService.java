@@ -33,12 +33,14 @@ public class BookService {
     public Book editBookDetails(String isbn, Book book) {
         return bookRepository.findByIsbn(isbn)
                 .map(existingBook -> {
-                    var bookToUpdate = new Book(
+                    var bookToUpdate = new Book( // 여기서는 Book.of를 사용하지 않은 다른 값들을 넣어주기 위해
                             existingBook.id(),
                             existingBook.isbn(),
                             book.title(),
                             book.author(),
                             book.price(),
+                            existingBook.createdDate(),
+                            existingBook.lastModifiedDate(), // 업데이트 성공 시 자동 날짜 업데이트
                             existingBook.version() // 업데이트 성공기 @Version으로 자동으로 증가
                     );
                     return bookRepository.save(bookToUpdate);

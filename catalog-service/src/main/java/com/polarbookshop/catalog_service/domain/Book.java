@@ -3,8 +3,12 @@ package com.polarbookshop.catalog_service.domain;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
+
+import java.time.Instant;
 
 public record Book(
 
@@ -28,12 +32,18 @@ public record Book(
         @Positive(message = "The book price must be greater than zero") // 0 보다 큰 수
         Double price,
 
+        @CreatedDate
+        Instant createdDate,
+
+        @LastModifiedDate
+        Instant lastModifiedDate,
+
         @Version // 업데이트 마다 자동으로 숫자를 증가
         int version
 ) {
 
         public static Book of(String isbn, String title, String author, Double price) {
-                return new Book(null, isbn, title, author, price, 0);
+                return new Book(null, isbn, title, author, price, null, null, 0);
                 // id 가 null이고 version이 0이여야 새로운 객체로 간주
         }
 }
