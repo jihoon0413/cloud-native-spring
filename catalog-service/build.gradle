@@ -25,7 +25,7 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2025.0.0") // 사용할 스프링 클라우드 버전
-	set('testcontainersVersion', "1.17.3") // 사용할 테스트컨테이너 버전
+	set('testcontainersVersion', "1.19.8") // 사용할 테스트컨테이너 버전
 }
 
 dependencies {
@@ -35,6 +35,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
 
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'  // 메타데이터가 자동으로 생성되어, 속성의 자동 완성 및 유형 검사가 가능함
