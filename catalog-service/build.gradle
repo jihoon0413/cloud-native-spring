@@ -25,6 +25,7 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2025.0.0") // 사용할 스프링 클라우드 버전
+	set('testcontainersVersion', "1.17.3") // 사용할 테스트컨테이너 버전
 }
 
 dependencies {
@@ -40,12 +41,14 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation 'org.testcontainers:postgresql' // postgresql db에 대한 컨테이너 관리 기능
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 dependencyManagement {
-	imports { // 스프링 클라우드 의존성 관리를 위한 BOM(Bill of Material)
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"  // 스프링 클라우드 의존성 관리를 위한 BOM(Bill of Material)
+		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"  // 컨테이너 의존성 관리를 위한 BOM
 	}
 }
 

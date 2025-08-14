@@ -1,0 +1,5 @@
+# integration은 기본 속성 보다 높은 우선 순위를 가짐
+
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:14.4:///
