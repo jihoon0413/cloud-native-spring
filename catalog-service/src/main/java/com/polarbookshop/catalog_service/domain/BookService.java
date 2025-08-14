@@ -39,6 +39,7 @@ public class BookService {
                             book.title(),
                             book.author(),
                             book.price(),
+                            book.publisher(),
                             existingBook.createdDate(),
                             existingBook.lastModifiedDate(), // 업데이트 성공 시 자동 날짜 업데이트
                             existingBook.version() // 업데이트 성공기 @Version으로 자동으로 증가

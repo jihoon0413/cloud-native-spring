@@ -32,6 +32,8 @@ public record Book(
         @Positive(message = "The book price must be greater than zero") // 0 보다 큰 수
         Double price,
 
+        String publisher,
+
         @CreatedDate
         Instant createdDate,
 
@@ -42,8 +44,8 @@ public record Book(
         int version
 ) {
 
-        public static Book of(String isbn, String title, String author, Double price) {
-                return new Book(null, isbn, title, author, price, null, null, 0);
+        public static Book of(String isbn, String title, String author, Double price, String publisher) {
+                return new Book(null, isbn, title, author, price, publisher, null, null, 0);
                 // id 가 null이고 version이 0이여야 새로운 객체로 간주
         }
 }
