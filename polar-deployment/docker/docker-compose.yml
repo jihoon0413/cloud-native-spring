@@ -8,8 +8,11 @@ services:
     container_name: "catalog-service"
     ports:
       - 9001:9001
+      - 8001:8001 # JVM이 디버그 연결을 듣는 포트
     environment:
       - BPL_JVM_THREAD_COUNT=50 # 패키토 빌드팩 환경 변수(메모리 계산을 위한 스레드 수 설정)
+      - BPL_DEBUG_ENABLED=true  # JVM 디버깅 연결을 가능하게 하기 위한 설정
+      - BPL_DEBUG_PORT=8001     # JVM이 디버깅 연결을 하는 port 번호
       - SPRING_DATASOURCE_URL=jdbc:postgresql://polar-postgres:5432/polardb_catalog
       - SPRING_PROFILES_ACTIVE=testdata
 
