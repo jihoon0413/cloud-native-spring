@@ -7,6 +7,8 @@ RUN java -Djarmode=layertools -jar catalog-service.jar extract
 # 계층 jar 를 적용해서 아카이브에서 계층 추출
 
 FROM eclipse-temurin:17
+RUN useradd spring
+USER spring
 WORKDIR workspace
 COPY --from=builder workspace/dependencies/ ./
 COPY --from=builder workspace/spring-boot-loader/ ./
