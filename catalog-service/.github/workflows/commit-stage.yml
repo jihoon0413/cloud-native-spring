@@ -5,7 +5,7 @@ on: push
 env:
   REGISTRY: ghcr.io # Git Hub Container Registry(깃허브 컨테이너 저장소 활용)
   IMAGE_NAME: jihoon0413/catalog-service
-  VERSION: lastest
+  VERSION: latest
 
 jobs:
   build:
