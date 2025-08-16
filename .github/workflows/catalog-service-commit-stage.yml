@@ -64,9 +64,10 @@ jobs:
           cache: gradle
       - name: Build container image
         run: |
-          chmod +x catalog-service/gradlew
+          chmod +x gradlew
           ./gradlew -p catalog-service bootBuildImage
             --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        working-directory: catalog-service
       - name: OCI image vulnerability scanning
         uses: anchore/scan-action@v3
         id: scan
