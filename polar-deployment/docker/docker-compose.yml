@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+
+  catalog-service:
+    depends_on:
+      - polar-postgres
+    image: "catalog-service"
+    container_name: "catalog-service"
+    ports:
+      - 9001:9001
+    environment:
+      - BPL_JVM_THREAD_COUNT=50 # 패키토 빌드팩 환경 변수(메모리 계산을 위한 스레드 수 설정)
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://polar-postgres:5432/polardb_catalog
+      - SPRING_PROFILES_ACTIVE=testdata
+
+  polar-postgres:
+    image: "postgres:14.12"
+    container_name: "polar-postgres"
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=polardb_catalog
