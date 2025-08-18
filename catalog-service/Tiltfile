@@ -6,6 +6,11 @@ custom_build(
     # 윈도우에선,  $EXPECTED_REF 대신 %EXPECTED_REF%
     # 위도운에선, ./gradlew 대신 gradlew.bat
     command = 'gradlew.bat bootBuildImage --imageName %EXPECTED_REF%',
+    # command='''
+    #        gradlew.bat bootBuildImage --imageName %EXPECTED_REF%
+    #        docker save %EXPECTED_REF% -o catalog-service.tar
+    #        minikube image load catalog-service.tar
+    #    ''',
     # 새로운 빌드를 시작하기 위해 지켜봐야 하는 파일
     deps = ['build.gradle', 'src']
 )
