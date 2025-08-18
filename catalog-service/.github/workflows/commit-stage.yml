@@ -3,8 +3,8 @@ name: Commit Stage
 on: push
 
 env:
-  REGISTRY: ghcr.io # Git Hub Container Registry(깃허브 컨테이너 저장소 활용)
-  IMAGE_NAME: jihoon0413/catalog-service
+  REGISTRY: ghcr.io
+  IMAGE_NAME: polarbookshop/catalog-service
   VERSION: latest
 
 jobs:
@@ -17,34 +17,37 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
           cache: gradle
-
+      - name: Build, unit tests and integration tests
+        run: |
+          chmod +x gradlew
+          ./gradlew build
       - name: Code vulnerability scanning
         uses: anchore/scan-action@v3
         id: scan
         with:
-          path: "${{ github.workspace }}/catalog-service"
+          path: "${{ github.workspace }}"
           fail-build: false
           severity-cutoff: high
-          acs-report-enable: true
-
       - name: Upload vulnerability report
         uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
-
-      - name: Build, unit tests and integration tests
+      - name: Setup tools
+        uses: alexellis/setup-arkade@v3
+      - name: Install tools
+        uses: alexellis/arkade-get@master
+        with:
+          kubeconform: latest
+      - name: Validate Kubernetes manifests
         run: |
-          chmod +x gradlew
-          ./gradlew build
-        working-directory: catalog-service
+          kubeconform --strict k8s
   package:
     name: Package and Publish
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -56,7 +59,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout source code
-        uses: actions/checkout@@v4
+        uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -66,7 +69,7 @@ jobs:
       - name: Build container image
         run: |
           chmod +x gradlew
-          ./gradlew -p catalog-service bootBuildImage \ 
+          ./gradlew bootBuildImage \
             --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
       - name: OCI image vulnerability scanning
         uses: anchore/scan-action@v3
