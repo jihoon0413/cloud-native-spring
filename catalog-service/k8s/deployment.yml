@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-service
+  labels:
+    app: catalog-service
+spec:
+  replicas: 2 # 몇 개의 파드 복제본을 배포할 것인지 설정
+  selector:
+    matchLabels:
+      app: catalog-service # 관리할 파드를 선택하기 위한 선택자 기준(나 이거 있는 애들만 관리한다!)
+  template: # 파드 생성을 위한 템플릿
+    metadata:
+      labels:
+        app: catalog-service # 실제로 생성될 파드에 붙일 라벨(selector에서 정의한 것과 같아야함)(이거 붙여서 만들어야지)
+    spec:
+      containers:
+        - name: catalog-service # 파드 이름
+          image: catalog-service # 컨테이너 실행에 사용할 이미지
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 5" ] # 쿠버네티스가 파드에 SIGTERM 신호를 보내기 전 5초를 기다리게 한다.
+          ports:
+            - containerPort: 9001 # 컨테이너에서 노출되는 포트
+          env:
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://polar-postgres/polardb_catalog
+            - name: SPRING_PROFILES_ACTIVE
+              value: testdata
