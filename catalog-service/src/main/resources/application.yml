@@ -10,7 +10,7 @@ server:
 
 spring:
   application:
-    name: catalog-service # config-server에서 설정한 spring:application:name 과 같아야 해당 uri로 설정을 가져올 수 있음
+    name: catalog-service # 설정 저장소에서 가져오고 싶은 파일의 이름을 작성
   lifecycle:
     timeout-per-shutdown-phase: 15s # 우아한 종료 기간
   config:

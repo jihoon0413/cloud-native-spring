@@ -30,7 +30,7 @@ dependencies {
 dependencyManagement {
 	imports { // 스프링 클라우드 의존성 관리를 위한 BOM(Bill of Material)
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+	} // 스프링 클라우드 관련 모듈을 추가할 때 버전을 따로 지정하지 않아도 BOM에 맞춰 자동으로 알맞은 버전이 적용
 }
 
 tasks.named('test') {
