@@ -10,6 +10,19 @@ spring:
     name: order-service
   lifecycle:
     timeout-per-shutdown-phase: 15s # 15초간 우아한 종료 기간 정의
+  config:
+    import: "optional:configserver:" # 가능하면 서버에서 설정 데이터를 가져오도록 설정 -> 설정 서버가 동작하지 않았도 애플리케이션이 동작할 수 있도록 설정
+  cloud:
+    config:
+      uri: http://localhost:8888 # 설정 서버의 url주소
+      request-connect-timeout: 5000 # 설정 서버에 연결될 때까지 최대로 기다리는 시간
+      request-read-timeout: 5000 # 설정 서버에서 데이터를 읽을 떄까지 최대로 기다리는 시간
+      fail-fast: false # 설정 서버 연결 실패를 심각한 실패로 간주
+      retry: # 심각한 실패(fail-fast: true)일 경우만 retry가 활성화 된다.
+        max-attempts: 6 # 최대 시도 횟수
+        initial-interval: 1000 # 최초 재시도 지연 시간
+        max-interval: 2000 # 재시도 지연 최대 시간
+        multiplier: 1.1 # 지연 시간 계산 승수
   r2dbc:
     username: user
     password: password
