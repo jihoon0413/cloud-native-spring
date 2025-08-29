@@ -10,6 +10,11 @@ spring:
     name: edge-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
+  data:
+    redis: #여러 인스턴스가 있을 떄 사용자의 요청을 제한하기 위해 요청기록을 보관(모든 인스턴스가 사용)
+      host: localhost # 클라이언트의 속도제한을 위해 사용!!!
+      port: 6379
+      timeout: 1s
   cloud:
     gateway:
       server:
@@ -41,7 +46,12 @@ spring:
               max-idle-time: 15s
               max-life-time: 60s
           default-filters:
-
+            - name: RequestRateLimiter
+              args: # 버킷은 서버측 속도 제한을 위해 사용
+                redis-rate-limiter: # 토큰 버킷 알고리즘으로 사용자의 요청수를 제한(버켓에 토큰이 있는 경우에만 사용자 요청 가능)
+                  replenishRate: 10 # 초당 버킷에 떨어지는 토큰 수
+                  burstCapacity: 20 # 최대 20개 요청까지 허용
+                  requestedTokens: 1 # 하나의 요청에 사용되는 토큰 수
             - name: Retry
               args:
                 retries: 3
@@ -66,6 +76,6 @@ resilience4j:
     configs:
       default: # 모든 시간 제한에 대한 기본 설정
         timeoutDuration: 5s
-#logging:
-#  level:
-#    io.github.resilience4j: DEBUG
+logging:
+  level:
+    io.github.resilience4j: DEBUG
