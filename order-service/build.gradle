@@ -56,6 +56,21 @@ dependencyManagement {
 
 	}
 }
+
+bootBuildImage {  // 빌드팩을 사용해 OCI 이미지를 빌드하기 위한 플러그인 작엄(패키토)
+	imageName= "${project.name}"
+	environment = ["BP_JVM_VERSION" : "17.*"]
+
+	docker {// 컨테이너 저장소 연결을 설정하기 위한 섹션
+		publishRegistry {// 컨테이너 저장소 인증을 설정하기 위한 섹션, 값음 그래들을 통해 전달됨
+			username = project.findProperty("registryUsername")
+			password = project.findProperty("registryToken")
+			url = project.findProperty("registryUrl")
+			// 이 정보들을 --publishImage에 활용하여 허브에 자동으로 저장할 수 있음
+		}
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
