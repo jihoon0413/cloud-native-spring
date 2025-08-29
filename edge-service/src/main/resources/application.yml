@@ -14,22 +14,25 @@ spring:
     gateway:
       server:
         webflux:
-#        webmvc:
           routes:
             - id: catalog-route
               uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
               predicates:
                 - Path=/books/**
-#              metadata:
-#                connect-timeout: 2000
-#                response-timeout: 5s
+              filters: # \uC11C\uD0B7 \uBE0C\uB808\uC774\uCEE4 \uD544\uD130 \uCD94\uAC00
+                - name: CircuitBreaker
+                  args:
+                    name: catalogCircuitBreaker
+                    fallbackUri: forward:/catalog-fallback # \uD68C\uB85C\uAC1C \uAC1C\uBC29(\uC7A5\uC560\uC0C1\uD669)\uB418\uC5C8\uC744 \uB584 \uC774 URI\uB85C \uC804\uB2EC
             - id: order_route
               uri: ${ORDER_SERVICE_URL:http://localhost:9002}/orders
               predicates:
                 - Path=/orders/**
-#              metadata:
-#                connect-timeout: 2000
-#                response-timeout: 5s
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: orderCircuitBreaker
+
           httpclient:
             connect-timeout: 2000
             response-timeout: 5s
@@ -44,8 +47,23 @@ spring:
                 methods: GET
                 series: SERVER_ERROR
                 exceptions: java.io.IOException, java.util.concurrent.TimeoutException
-#                backoff:
+#                backoff: \uC7AC\uC2DC\uB3C4\uD560 \uC2DC\uAC04\uC744 \uC870\uC808\uD558\uB294 \uACF5\uC2DD
 #                  first-backoff: 50ms
 #                  maxBackOff: 500ms
 #                  factor: 2
 #                  basedOnPreviousValue: false
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 20 # \uD68C\uACE0\uAC00 \uD3D0\uC1C4(\uC815\uC0C1)\uC0C1\uD0DC\uC77C \uB54C \uD638\uCD9C \uACB0\uACFC\uB97C \uAE30\uB85D\uD558\uB294 \uC708\uB3C4 \uD06C\uAE30
+        permittedNumberOfCallsInHalfOpenState: 5 # \uBC18\uAC1C\uBC29 \uC0C1\uD0DC\uC5D0\uC11C\uC758 \uC708\uB3C4 \uC0AC\uC774\uC988
+        failureRateThreshold: 50 # \uAC1C\uBC29\uC0C1\uD0DC\uB85C \uBC14\uB00C\uB294 \uC2E4\uD328\uC728 \uC784\uACC4\uAC12 \uC124\uC815
+        waitDurationInOpenState: 15000 # \uAC1C\uBC29\uC5D0\uC11C \uBC18\uAC1C\uBC29 \uC0C1\uD0DC\uB85C \uBC14\uAFB8\uAE30 \uC804 \uAE30\uB2E4\uB9AC\uB294 \uC2DC\uAC04
+  timelimiter: # \uC678\uBD80 \uC11C\uBE44\uC2A4 \uD638\uCD9C\uC774\uB098 \uBE44\uB3D9\uAE30 \uC791\uC5C5\uC5D0 \uB300\uD574 \uCD5C\uB300 \uC2E4\uD589 \uC2DC\uAC04\uC744 \uC81C\uD55C
+    configs:
+      default: # \uBAA8\uB4E0 \uC2DC\uAC04 \uC81C\uD55C\uC5D0 \uB300\uD55C \uAE30\uBCF8 \uC124\uC815
+        timeoutDuration: 5s
+logging:
+  level:
+    io.github.resilience4j: DEBUG
