@@ -15,6 +15,11 @@ spring:
       host: localhost # 클라이언트의 속도제한을 위해 사용!!!
       port: 6379
       timeout: 1s
+  session: # 스프링 세션 설정(레디스)
+    store-type: redis
+    timeout: 10m
+    redis:
+      namespace: polar:edge
   cloud:
     gateway:
       server:
@@ -46,6 +51,7 @@ spring:
               max-idle-time: 15s
               max-life-time: 60s
           default-filters:
+            - SaveSession # 요청을 서비스로 전달하기 전에 세션 데이터 저장
             - name: RequestRateLimiter
               args: # 버킷은 서버측 속도 제한을 위해 사용
                 redis-rate-limiter: # 토큰 버킷 알고리즘으로 사용자의 요청수를 제한(버켓에 토큰이 있는 경우에만 사용자 요청 가능)
