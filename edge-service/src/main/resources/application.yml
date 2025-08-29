@@ -19,11 +19,11 @@ spring:
               uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
               predicates:
                 - Path=/books/**
-              filters: # \uC11C\uD0B7 \uBE0C\uB808\uC774\uCEE4 \uD544\uD130 \uCD94\uAC00
+              filters: # 서킷 브레이커 필터 추가
                 - name: CircuitBreaker
                   args:
                     name: catalogCircuitBreaker
-                    fallbackUri: forward:/catalog-fallback # \uD68C\uB85C\uAC1C \uAC1C\uBC29(\uC7A5\uC560\uC0C1\uD669)\uB418\uC5C8\uC744 \uB584 \uC774 URI\uB85C \uC804\uB2EC
+                    fallbackUri: forward:/catalog-fallback # 회로개 개방(장애상황)되었을 떄 이 URI로 전달
             - id: order_route
               uri: ${ORDER_SERVICE_URL:http://localhost:9002}/orders
               predicates:
@@ -41,29 +41,31 @@ spring:
               max-idle-time: 15s
               max-life-time: 60s
           default-filters:
+
             - name: Retry
               args:
                 retries: 3
                 methods: GET
                 series: SERVER_ERROR
                 exceptions: java.io.IOException, java.util.concurrent.TimeoutException
-#                backoff: \uC7AC\uC2DC\uB3C4\uD560 \uC2DC\uAC04\uC744 \uC870\uC808\uD558\uB294 \uACF5\uC2DD
+#                backoff: 재시도할 시간을 조절하는 공식
 #                  first-backoff: 50ms
 #                  maxBackOff: 500ms
 #                  factor: 2
 #                  basedOnPreviousValue: false
+
 resilience4j:
   circuitbreaker:
     configs:
       default:
-        slidingWindowSize: 20 # \uD68C\uACE0\uAC00 \uD3D0\uC1C4(\uC815\uC0C1)\uC0C1\uD0DC\uC77C \uB54C \uD638\uCD9C \uACB0\uACFC\uB97C \uAE30\uB85D\uD558\uB294 \uC708\uB3C4 \uD06C\uAE30
-        permittedNumberOfCallsInHalfOpenState: 5 # \uBC18\uAC1C\uBC29 \uC0C1\uD0DC\uC5D0\uC11C\uC758 \uC708\uB3C4 \uC0AC\uC774\uC988
-        failureRateThreshold: 50 # \uAC1C\uBC29\uC0C1\uD0DC\uB85C \uBC14\uB00C\uB294 \uC2E4\uD328\uC728 \uC784\uACC4\uAC12 \uC124\uC815
-        waitDurationInOpenState: 15000 # \uAC1C\uBC29\uC5D0\uC11C \uBC18\uAC1C\uBC29 \uC0C1\uD0DC\uB85C \uBC14\uAFB8\uAE30 \uC804 \uAE30\uB2E4\uB9AC\uB294 \uC2DC\uAC04
-  timelimiter: # \uC678\uBD80 \uC11C\uBE44\uC2A4 \uD638\uCD9C\uC774\uB098 \uBE44\uB3D9\uAE30 \uC791\uC5C5\uC5D0 \uB300\uD574 \uCD5C\uB300 \uC2E4\uD589 \uC2DC\uAC04\uC744 \uC81C\uD55C
+        slidingWindowSize: 20 # 회고가 폐쇄(정상)상태일 때 호출 결과를 기록하는 윈도 크기
+        permittedNumberOfCallsInHalfOpenState: 5 # 반개방 상태에서의 윈도 사이즈
+        failureRateThreshold: 50 # 개방상태로 바뀌는 실패율 임계값 설정
+        waitDurationInOpenState: 15000 # 개방에서 반개방 상태로 바꾸기 전 기다리는 시간
+  timelimiter: # 외부 서비스 호출이나 비동기 작업에 대해 최대 실행 시간을 제한
     configs:
-      default: # \uBAA8\uB4E0 \uC2DC\uAC04 \uC81C\uD55C\uC5D0 \uB300\uD55C \uAE30\uBCF8 \uC124\uC815
+      default: # 모든 시간 제한에 대한 기본 설정
         timeoutDuration: 5s
-logging:
-  level:
-    io.github.resilience4j: DEBUG
+#logging:
+#  level:
+#    io.github.resilience4j: DEBUG
