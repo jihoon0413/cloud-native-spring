@@ -5,4 +5,17 @@ spring:
     name: dispatcher-service
   cloud:
     function:
-      definition: pack|label # \uC2A4\uD504\uB9C1 \uD074\uB77C\uC6B0\uB4DC \uD55C\uC218\uAC00 \uAD00\uB9AC\uD560 \uD568\uC218 \uC815\uC758
+      definition: pack|label # 스프링 클라우드 함수가 관리할 함수 정의 -> rabbitMq의 입출력 바인딩의 이름으로 사용(packlabel-in,out-0)
+    stream:
+      bindings:
+        packlabel-in-0: # 입력 바인딩(연결 통로 역할)
+          destination: order-accepted # rabbitMq의 익스체이지(바인더를 연결할 대상의 브로커 내에서의 실제 이름)
+          group: ${spring.application.name} # 대상에 관심을 갖는 소비자 그룹
+        packlabel-out-0: # 아웃 바인딩 역할
+          destination: order-dispatched # rabbitMq의 익스체이지(바인더를 연결할 대상의 브로커 내에서의 실제 이름)
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    connection-timeout: 5s
