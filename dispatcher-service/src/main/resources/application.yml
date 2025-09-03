@@ -1,0 +1,8 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: dispatcher-service
+  cloud:
+    function:
+      definition: pack|label # \uC2A4\uD504\uB9C1 \uD074\uB77C\uC6B0\uB4DC \uD55C\uC218\uAC00 \uAD00\uB9AC\uD560 \uD568\uC218 \uC815\uC758
