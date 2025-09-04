@@ -23,6 +23,26 @@ spring:
         initial-interval: 1000 # 최초 재시도 지연 시간
         max-interval: 2000 # 재시도 지연 최대 시간
         multiplier: 1.1 # 지연 시간 계산 승수
+    function:
+      definition: dispatchOrder
+    stream:
+      bindings:
+        dispatchOrder-in-0:
+          destination: order-dispatched
+          group: ${spring.application.name}
+        acceptedOrder-out-0:
+          destination: order-accepted
+      rabbit:
+        bindings:
+          acceptOrder-out-0:
+            producer:
+              transacted: true  # 트렌잭션 지원 활성화
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    connection-timeout: 5s
   r2dbc:
     username: user
     password: password
