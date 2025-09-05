@@ -3,7 +3,19 @@ server:
 spring:
   application:
     name: dispatcher-service
+  config:
+    import: "optional:configserver:"
   cloud:
+    config:
+      uri: http://localhost:8888
+      request-connect-timeout: 5000 # 5s
+      request-read-timeout: 5000 # 5s
+      fail-fast: false # In production, set to true
+      retry:
+        max-attempts: 6
+        initial-interval: 1000 # 1s
+        max-interval: 2000 # 2s
+        multiplier: 1.1
     function:
       definition: pack|label # 스프링 클라우드 함수가 관리할 함수 정의 -> rabbitMq의 입출력 바인딩의 이름으로 사용(packlabel-in,out-0)
     stream:
