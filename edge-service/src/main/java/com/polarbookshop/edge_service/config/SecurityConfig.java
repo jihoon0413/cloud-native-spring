@@ -14,13 +14,27 @@ public class SecurityConfig {
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(
-            ServerHttpSecurity http
+            ServerHttpSecurity http,
+            ReactiveClientRegistrationRepository clientRegistrationRepository
     ) {
         return http
                 .authorizeExchange(exchange ->
                     exchange.anyExchange().authenticated())
                 .oauth2Login(Customizer.withDefaults())
+                .logout(logout -> logout.logoutSuccessHandler( // 로그 아웃이 성공하면 사용자 지정 핸들러 정의
+                        oidcLogoutSuccessHandler(clientRegistrationRepository)))
                 .build();
+    }
+
+    private ServerLogoutSuccessHandler oidcLogoutSuccessHandler(
+            ReactiveClientRegistrationRepository clientRegistrationRepository
+    ) {
+        var oidcLogoutSuccessHandler =
+                new OidcClientInitiatedServerLogoutSuccessHandler(
+                        clientRegistrationRepository);
+        oidcLogoutSuccessHandler
+                .setPostLogoutRedirectUri("{baseUrl}");
+        return oidcLogoutSuccessHandler;
     }
 
 
