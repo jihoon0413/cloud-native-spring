@@ -31,7 +31,19 @@ spring:
         provider:
           keycloak:
             issuer-uri: http://localhost:8080/realms/PolarBookshop # 특정 영역에 oauth2, oidc 관련 엔드포인드를 알려주는 url
+  config:
+    import: "optional:configserver:"
   cloud:
+    config:
+      uri: http://localhost:8888
+      request-connect-timeout: 5000 # 5s
+      request-read-timeout: 5000 # 5s
+      fail-fast: false # In production, set to true
+      retry:
+        max-attempts: 6
+        initial-interval: 1000 # 1s
+        max-interval: 2000 # 2s
+        multiplier: 1.1
     gateway:
       server:
         webflux:

@@ -32,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-data-redis'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.testcontainers:junit-jupiter'
@@ -45,6 +46,13 @@ dependencyManagement {
 		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
 	}
 }
+
+bootBuildImage {
+	builder = "docker.io/paketobuildpacks/builder-jammy-base"
+	imageName = "${project.name}"
+	environment = ["BP_JVM_VERSION": "17"]
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
