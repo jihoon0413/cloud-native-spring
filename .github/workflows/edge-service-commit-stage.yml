@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -23,7 +24,7 @@ jobs:
           java-version: 17
           cache: gradle
 
-      - name: Build, unit tests and integration tests
+      - name: Build
         run: |
           chmod +x gradlew
           ./gradlew build
