@@ -36,6 +36,10 @@ spring:
       server:
         webflux:
           routes:
+            - id: spa-route
+              uri: ${SPA_URL:http://localhost:9004} # SPA_URL에 저장된 값이 없으면 localhost:9004사용
+              predicates:
+                - Path=/,/*.css,/*.js,/favicon.ico
             - id: catalog-route
               uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
               predicates:
@@ -45,7 +49,7 @@ spring:
                   args:
                     name: catalogCircuitBreaker
                     fallbackUri: forward:/catalog-fallback # 회로개 개방(장애상황)되었을 떄 이 URI로 전달
-            - id: order_route
+            - id: order-route
               uri: ${ORDER_SERVICE_URL:http://localhost:9002}/orders
               predicates:
                 - Path=/orders/**
@@ -95,4 +99,7 @@ resilience4j:
         timeoutDuration: 5s
 logging:
   level:
-    io.github.resilience4j: DEBUG
+#    io.github.resilience4j: DEBUG
+    org:
+      springframework:
+        security: DEBUG

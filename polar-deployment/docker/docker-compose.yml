@@ -30,6 +30,14 @@ services:
       - SPRING_R2DBC_URL=r2dbc:postgresql://polar-postgres:5432/polardb_order
       - SPRING_FLYWAY_URL=jdbc:postgresql://polar-postgres:5432/polardb_order
 
+  polar-ui:
+    image: "ghcr.io/polarbookshop/polar-ui:latest"
+    container_name: "polar-ui"
+    ports:
+      - 9004:9004
+    environment:
+      - PORT=9004 #NGINX의 서버 포트를 설정
+
   polar-postgres:
     image: "postgres:14.12"
     container_name: "polar-postgres"
@@ -41,7 +49,7 @@ services:
     volumes:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
   polar-redis:
-    image: "redis:7.0"
+    image: "redis:7.2"
 
     container_name: "polar-redis"
     ports:
