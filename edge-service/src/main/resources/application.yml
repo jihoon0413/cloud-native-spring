@@ -79,6 +79,7 @@ spring:
               max-life-time: 60s
           default-filters:
             - SaveSession # 요청을 서비스로 전달하기 전에 세션 데이터 저장
+            - TokenRelay # 다른 서비스(주문 서비스)를 활용할 때 토큰을 전달할 수 있도록 설정
             - name: RequestRateLimiter
               args: # 버킷은 서버측 속도 제한을 위해 사용
                 redis-rate-limiter: # 토큰 버킷 알고리즘으로 사용자의 요청수를 제한(버켓에 토큰이 있는 경우에만 사용자 요청 가능)
