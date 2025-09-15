@@ -27,7 +27,7 @@ spring:
           keycloak: # security에서 클라우드 등록을 식별하는 이름
             client-id: edge-service # keycloak에 정의된 oauth2 클라이언트 식별자
             client-secret: polar-keycloak-secret
-            scope: openid
+            scope: openid,roles # 사용자 role에 대한 정보를 제공받는다.
         provider:
           keycloak:
             issuer-uri: http://localhost:8080/realms/PolarBookshop # 특정 영역에 oauth2, oidc 관련 엔드포인드를 알려주는 url
