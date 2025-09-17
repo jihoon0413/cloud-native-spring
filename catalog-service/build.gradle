@@ -26,6 +26,7 @@ repositories {
 ext {
 	set('springCloudVersion', "2025.0.0") // 사용할 스프링 클라우드 버전
 	set('testcontainersVersion', "1.19.8") // 사용할 테스트컨테이너 버전
+	set('testKeycloakVersion', "3.3.1")
 }
 
 dependencies {
@@ -45,7 +46,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.testcontainers:postgresql' // postgresql db에 대한 컨테이너 관리 기능
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.testcontainers:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.testcontainers:postgresql'
+	testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
+
 }
 
 dependencyManagement {
