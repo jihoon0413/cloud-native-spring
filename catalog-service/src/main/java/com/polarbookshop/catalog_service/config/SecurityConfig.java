@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/", "/books/**")
                         .permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().hasRole("employee") // 인증과 권한을 가지고 있어야 한다.
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(sessionManagement ->
