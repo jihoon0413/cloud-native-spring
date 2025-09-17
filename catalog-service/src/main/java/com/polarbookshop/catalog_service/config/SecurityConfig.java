@@ -32,4 +32,18 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter(); // claim을 GrantedAuthority 로 매핑 위한 변환기
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles"); // roles 클래임에서 역할 추출
+
+        var jwtAuthenticationConverter = new JwtAuthenticationConverter(); // jwt를 변환할 방법을 정의, 권한을 만드는 방법만 사용자가 지정
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+        return jwtAuthenticationConverter;
+
+    }
+
+
 }
