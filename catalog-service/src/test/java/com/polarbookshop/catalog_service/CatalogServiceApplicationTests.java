@@ -70,6 +70,32 @@ class CatalogServiceApplicationTests {
 	}
 
 	@Test
+	void whenGetRequestWithIdThenBookReturned() {
+		var isbn = "3213213124";
+		var bookToCreate = Book.of(isbn, "Title", "Author", 6.66, "publisher");
+
+		Book expected = webTestClient.post()
+				.uri("/books")
+				.headers(headers -> headers.setBearerAuth(isabelleTokens.accessToken))
+				.bodyValue(bookToCreate)
+				.exchange()
+				.expectStatus().isCreated()
+				.expectBody(Book.class).value(book -> assertThat(book).isNotNull())
+				.returnResult().getResponseBody();
+
+		webTestClient
+				.get()
+				.uri("/books/" + isbn)
+				.exchange()
+				.expectStatus().is2xxSuccessful()
+				.expectBody(Book.class).value(book -> {
+					assertThat(book).isNotNull();
+					assertThat(book.isbn()).isEqualTo(isbn);
+				});
+
+	}
+
+	@Test
 	void whenPostRequestThenBookCreated() {
 		var expectedBook = Book.of("1231231231", "Title", "Author", 9.90, "publisher");
 
@@ -90,6 +116,17 @@ class CatalogServiceApplicationTests {
 	}
 
 	@Test
+	void whenPostRequestUnauthenticatedThen401() {
+		var expectedBook = Book.of("1231231233", "Title", "Author", 9.90, "Polar");
+
+		webTestClient.post().uri("/books")
+				.bodyValue(expectedBook)
+				.exchange()
+				.expectStatus().isUnauthorized();
+
+	}
+
+	@Test
 	void whenPostRequestUnauthorizedThen403() {
 		var expectedBook = Book.of("1231231232", "Title", "Author", 9.90, "Polarsophia");
 
@@ -103,16 +140,63 @@ class CatalogServiceApplicationTests {
 	}
 
 	@Test
-	void whenPostRequestUnauthenticatedThen401() {
-		var expectedBook = Book.of("1231231233", "Title", "Author", 9.90, "Polar");
-
-		webTestClient.post().uri("/books")
-				.bodyValue(expectedBook)
+	void whenPutRequestThenBookUpdated() {
+		var bookIsbn = "4564564566";
+		var bookToCreate = Book.of(bookIsbn, "Title", "Author", 9.90, "Polarsophia");
+		Book createdBook = webTestClient.post()
+				.uri("/books")
+				.headers(headers -> headers.setBearerAuth(isabelleTokens.accessToken))
+				.bodyValue(bookToCreate)
 				.exchange()
-				.expectStatus().isUnauthorized();
+				.expectStatus().isCreated()
+				.expectBody(Book.class).value(book -> assertThat(book).isNotNull())
+				.returnResult().getResponseBody();
 
+		var bookToUpdate = new Book(createdBook.id(), createdBook.isbn(), createdBook.title(), createdBook.author(), 45.6,
+				createdBook.publisher(), createdBook.createdDate(), createdBook.lastModifiedDate(), createdBook.version());
+
+		webTestClient.put()
+				.uri("/books/"+bookIsbn)
+				.headers(headers -> headers.setBearerAuth(isabelleTokens.accessToken))
+				.bodyValue(bookToUpdate)
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody(Book.class).value(book -> {
+					assertThat(book).isNotNull();
+					assertThat(book.price()).isEqualTo(bookToUpdate.price());
+				});
 	}
 
+	@Test
+	void whenDeleteRequestThenBookDeleted() {
+		var bookIsbn = "1231231233";
+		var bookToCreate = Book.of(bookIsbn, "Title", "Author", 9.90, "Polarsophia");
+
+
+		webTestClient.post()
+				.uri("/books")
+				.headers(headers -> headers.setBearerAuth(isabelleTokens.accessToken))
+				.bodyValue(bookToCreate)
+				.exchange()
+				.expectStatus().isCreated();
+
+		webTestClient.delete()
+				.uri("/books/" + bookIsbn)
+				.headers(headers -> headers.setBearerAuth(isabelleTokens.accessToken))
+				.exchange()
+				.expectStatus().isNoContent();
+
+		webTestClient.get()
+				.uri("/books/" + bookIsbn)
+				.exchange()
+				.expectStatus().isNotFound()
+				.expectBody(String.class).value(errorMessage ->
+						assertThat(errorMessage).isEqualTo("The book with ISBN " + bookIsbn + " was not found")
+				);
+
+
+
+	}
 
 	private static KeycloakToken authenticateWith(
 			String username, String password, WebClient webClient
