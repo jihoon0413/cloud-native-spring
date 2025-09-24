@@ -31,7 +31,7 @@ services:
       - SPRING_FLYWAY_URL=jdbc:postgresql://polar-postgres:5432/polardb_order
 
   polar-ui:
-    image: "ghcr.io/polarbookshop/polar-ui:latest"
+    image: "ghcr.io/polarbookshop/polar-ui:v1"
     container_name: "polar-ui"
     ports:
       - 9004:9004
@@ -50,7 +50,6 @@ services:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
   polar-redis:
     image: "redis:7.2"
-
     container_name: "polar-redis"
     ports:
       - 6379:6379

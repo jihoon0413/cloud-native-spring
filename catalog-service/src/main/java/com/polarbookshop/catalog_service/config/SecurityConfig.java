@@ -24,10 +24,11 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().hasRole("employee") // 인증과 권한을 가지고 있어야 한다.
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(Customizer.withDefaults())) //
                 .sessionManagement(sessionManagement ->
-                        sessionManagement
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        sessionManagement                                                //상태를 세션에 저장하지 않음으로서
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 매 요청마다 토큰을 통해서만 인증
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
