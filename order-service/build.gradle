@@ -21,6 +21,7 @@ repositories {
 ext {
 	set('springCloudVersion', "2025.0.0") // 사용할 스프링 클라우드 버전
 	set('testcontainersVersion', "1.19.8") // 사용할 테스트컨테이너 버전
+	set('testKeycloakVersion', "3.3.1")
 }
 
 dependencies {
@@ -30,6 +31,8 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit' //스프링 클라우드 스트림 rabbitmq
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server' // order, catalog 서비스는 리소스 서버
+	// 리소스를 edge-service라는 사용자, 서버 외의 3자가 요청하기 때문에 edge에서 보내는 jwt를 검증하기 위해 사용
 
 
 	runtimeOnly 'org.postgresql:postgresql'
@@ -41,6 +44,9 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'  // 메타데이터가 자동으로 생성되어, 속성의 자동 완성 및 유형 검사가 가능함
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
+	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.testcontainers:junit-jupiter'
