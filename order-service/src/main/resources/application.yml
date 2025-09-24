@@ -12,6 +12,11 @@ spring:
     timeout-per-shutdown-phase: 15s # 15초간 우아한 종료 기간 정의
   config:
     import: "optional:configserver:" # 가능하면 서버에서 설정 데이터를 가져오도록 설정 -> 설정 서버가 동작하지 않았도 애플리케이션이 동작할 수 있도록 설정
+  security:
+    oauth2:
+      resourceserver:
+        jwt: # 어떤 형식을 검증할지 지정
+          issuer-uri: http://localhost:8080/realms/PolarBookshop # JWT 토큰의 발행자, JWT 토큰의 iss 클레임과 일치해야 하는 URL로, 리소스 서버가 JWT 토큰의 유효성과 신뢰성을 검증하는 데 필수적
   cloud:
     config:
       uri: http://localhost:8888 # 설정 서버의 url주소
