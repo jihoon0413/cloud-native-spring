@@ -23,8 +23,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -153,7 +151,7 @@ class CatalogServiceApplicationTests {
 				.returnResult().getResponseBody();
 
 		var bookToUpdate = new Book(createdBook.id(), createdBook.isbn(), createdBook.title(), createdBook.author(), 45.6,
-				createdBook.publisher(), createdBook.createdDate(), createdBook.lastModifiedDate(), createdBook.version());
+				createdBook.publisher(), createdBook.createdDate(), createdBook.lastModifiedDate(), createdBook.createdBy(), createdBook.lastModifiedBy(), createdBook.version());
 
 		webTestClient.put()
 				.uri("/books/"+bookIsbn)
