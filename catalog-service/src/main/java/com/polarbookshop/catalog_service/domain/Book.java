@@ -3,10 +3,7 @@ package com.polarbookshop.catalog_service.domain;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 
 import java.time.Instant;
 
@@ -40,12 +37,18 @@ public record Book(
         @LastModifiedDate
         Instant lastModifiedDate,
 
+        @CreatedBy
+        String createdBy,
+
+        @LastModifiedBy
+        String lastModifiedBy,
+
         @Version // 업데이트 마다 자동으로 숫자를 증가
         int version
 ) {
 
         public static Book of(String isbn, String title, String author, Double price, String publisher) {
-                return new Book(null, isbn, title, author, price, publisher, null, null, 0);
+                return new Book(null, isbn, title, author, price, publisher, null, null, null, null, 0);
                 // id 가 null이고 version이 0이여야 새로운 객체로 간주
         }
 }
