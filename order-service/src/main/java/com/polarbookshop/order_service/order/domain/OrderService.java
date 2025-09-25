@@ -28,8 +28,8 @@ public class OrderService {
         this.streamBridge = streamBridge;
     }
 
-    public Flux<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public Flux<Order> getAllOrders(String userId) {
+        return orderRepository.findAllByCreatedBy(userId);
     }
 
     @Transactional // 데이터를 저장하는 것과 이벤트를 발행하는 것은 원자적으로 수행되어야하기 때문에 트랜잭션 사용
@@ -81,6 +81,8 @@ public class OrderService {
                 OrderStatus.DISPATCHED,
                 existingOrder.createdDate(),
                 existingOrder.lastModifiedDate(),
+                existingOrder.createdBy(),
+                existingOrder.lastModifiedBy(),
                 existingOrder.version()
         );
     }
