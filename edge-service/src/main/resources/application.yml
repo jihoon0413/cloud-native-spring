@@ -111,8 +111,9 @@ resilience4j:
       default: # 모든 시간 제한에 대한 기본 설정
         timeoutDuration: 5s
 logging:
+  group: # 로깅 레벌을 그룹화해서 설정 가능
+    circuitbreaker: io.github.resilience4j, org.springframework.cloud.circuitbreaker
   level:
-#    io.github.resilience4j: DEBUG
-    org:
-      springframework:
-        security: DEBUG
+    circuitbreaker: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
