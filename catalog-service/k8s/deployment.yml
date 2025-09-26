@@ -31,3 +31,15 @@ spec:
               value: jdbc:postgresql://polar-postgres/polardb_catalog
             - name: SPRING_PROFILES_ACTIVE
               value: testdata
+          livenessProbe: # 활성 상태를 쿠버네티스에서 get으로 가져올 수 있도록 설정
+            httpGet:
+              path: /actuator/health/liveness
+              port: 9001
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe: # 준비 상태를 쿠버네티스에서 get으로 가져올 수 있도록 설정
+            httpGet:
+              path: /actuator/health/readiness
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 15

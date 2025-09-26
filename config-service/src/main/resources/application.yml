@@ -20,3 +20,22 @@ spring:
           timeout: 5  # 원격 저장소와 연결시 시간 한도
           clone-on-start: true # 서비스 시작시 원격 저장소를 로컬로 먼저 복제해 저장하도록 설정
           force-pull: true # 원격 설정 저장소와 로컬의 설정이 달라졌을 때 삭제하고 다시 로드
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+info:
+  system: Polar Bookshop
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: configprops, env, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
