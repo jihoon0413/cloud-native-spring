@@ -35,6 +35,7 @@ public class SecurityConfig {
     ) {
         return http
                 .authorizeExchange(exchange -> exchange
+                        .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/", "/*.css", "/*.js", "/favicon.ico").permitAll()     // SPA의 정적 리소스에 대한 접근 허용
                         .pathMatchers(HttpMethod.GET, "/books/**").permitAll()      // 도서 검색의 경우 인증 없이 가능
                         .anyExchange().authenticated()

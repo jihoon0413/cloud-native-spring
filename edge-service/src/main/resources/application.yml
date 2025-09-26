@@ -117,3 +117,18 @@ logging:
     circuitbreaker: DEBUG
   pattern:
     level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: configprops, env, gateway, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  probes:
+    enabled: true
+  group:
+    readiness:
+      include: readinessState,redis # 애플리케이션과 redis의 상태를 모두 확인하여 상태를 정해야함 -> redis없이 서비스를 할 수 없기 때문에 준비 상태
