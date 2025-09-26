@@ -20,6 +20,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/", "/books/**")
                         .permitAll()
                         .anyRequest().hasRole("employee") // 인증과 권한을 가지고 있어야 한다.

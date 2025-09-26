@@ -43,7 +43,13 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh # http를 통해 /actuator/refresh 엔트포인트 노출
+        include: configprops, env, flyway, health, heapdump, info, loggers, mappings, prometheus # http를 통해 /actuator/refresh 엔트포인트 노출
+  endpoint:
+    health:
+      show-details: always # 애플리케이션의 상세한 정보를 보기 위한 설정
+      show-components: always # 구성 요소에 대한 정보를 보기 위한 설정
+      probes:
+        enabled: true # 상태 프로브 활성화 활성, 준비 상태 반환
 
 polar:
   greeting: Welcome to the local book catalog!
