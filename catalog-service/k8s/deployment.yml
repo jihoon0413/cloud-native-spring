@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: catalog-service # 실제로 생성될 파드에 붙일 라벨(selector에서 정의한 것과 같아야함)(이거 붙여서 만들어야지)
+      annotations: # 프로메테우스에게 데이터를 제공하는 곳의 정보를 알려줌
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /actuator/prometheus
+        prometheus.io/port: "9001"
     spec:
       containers:
         - name: catalog-service # 파드 이름
@@ -31,6 +35,8 @@ spec:
               value: jdbc:postgresql://polar-postgres/polardb_catalog
             - name: SPRING_PROFILES_ACTIVE
               value: testdata
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: http://polar-keycloak/realms/PolarBookshop
           livenessProbe: # 활성 상태를 쿠버네티스에서 get으로 가져올 수 있도록 설정
             httpGet:
               path: /actuator/health/liveness

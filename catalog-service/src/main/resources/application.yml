@@ -50,6 +50,9 @@ management:
       show-components: always # 구성 요소에 대한 정보를 보기 위한 설정
       probes:
         enabled: true # 상태 프로브 활성화 활성, 준비 상태 반환
+  metrics:
+    tags: # 애플리케이션 이름으로 마이크로미터 공통 태그 설정 -> 모든 메트릭에 적용되는 프로메테우스 레이블이 만들어짐
+      application: ${spring.application.name}
 
 polar:
   greeting: Welcome to the local book catalog!
