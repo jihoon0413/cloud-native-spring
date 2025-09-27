@@ -115,13 +115,14 @@ services:
     container_name: grafana
     depends_on:
       - loki
+      - prometheus
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=user
       - GF_SECURITY_ADMIN_PASSWORD=password
     volumes:
-      - ./observability/grafana/datasources:/etc/grafana/provisioning/datasources/datasource
+      - ./observability/grafana/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./observability/grafana/grafana.ini:/etc/grafana/grafana.ini
 
@@ -142,5 +143,13 @@ services:
       - LOKI_URL=http://loki:3100/loki/api/v1/push
     volumes:
       - ./observability/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.52.0
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
 
