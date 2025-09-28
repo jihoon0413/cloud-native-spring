@@ -39,6 +39,10 @@ spring:
         jwt: # access token의 형식을 jwt와 opaque 중에 선택
           issuer-uri: http://localhost:8080/realms/PolarBookshop # 토큰을 받아올 주소
 
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
 management:
   endpoints:
     web:
