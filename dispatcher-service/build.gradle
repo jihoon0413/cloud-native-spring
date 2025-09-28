@@ -20,6 +20,7 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2025.0.0")
+	set('otelVersion', "1.33.3")
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
 
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
