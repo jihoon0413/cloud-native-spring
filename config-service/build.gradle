@@ -39,6 +39,10 @@ dependencyManagement {
 	} // 스프링 클라우드 관련 모듈을 추가할 때 버전을 따로 지정하지 않아도 BOM에 맞춰 자동으로 알맞은 버전이 적용
 }
 
+springBoot {
+	buildInfo() //빌드 정보를 info가 붙은 객체로 만드는 느낌
+}
+
 bootBuildImage {  // 빌드팩을 사용해 OCI 이미지를 빌드하기 위한 플러그인 작엄(패키토)
 	imageName = "${project.name}"
 	environment = ["BP_JVM_VERSION": "17.*"]

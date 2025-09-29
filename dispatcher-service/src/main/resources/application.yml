@@ -47,6 +47,13 @@ management:
       show-components: always
       probes:
         enabled: true
+  info:
+    env:
+      enabled: true # info로 시작하는 환경변수 정보를 info 엔드포인트를 통해 노출을 허락하는 설정
+    java:
+      enabled: true # java 정보 포함을 활성화
+    os:
+      enabled: true # 운영체제 정보 포함 활성화
   metrics:
     tags:
       application: ${spring.application.name}
